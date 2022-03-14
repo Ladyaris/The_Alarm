@@ -6,6 +6,6 @@
         android:startColor="#ACACAC"
         android:endColor="#686868"
         android:type="linear"/>
-    <stroke android:width="@dimen/_5dp"/>
+    <stroke android:width="5dp"/>
     <stroke android:color="@color/black"/>
 </shape>

@@ -1,4 +1,3 @@
-
 package com.chores.the_alarm
 
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +7,6 @@ import com.chores.the_alarm.databinding.ActivityMainBinding
 import com.chores.the_alarm.fragment.TimePickerFragment
 import com.chores.the_alarm.room.Alarm
 import com.chores.the_alarm.room.AlarmDB
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_repeating_alarm.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,17 +14,21 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RepeatingAlarm : AppCompatActivity(), View.OnClickListener, TimePickerFragment.DialogTimeListener {
+
+
+class RepeatingAlarmActivity : AppCompatActivity(), View.OnClickListener,
+    TimePickerFragment.DialogTimeListener {
 
     private var binding: ActivityMainBinding? = null
 
     private lateinit var alarmReceiver: AlarmReceiver
 
-    val db by lazy { AlarmDB (this) }
+    val db by lazy { AlarmDB(this) }
 
     companion object{
         private const val TIME_PICKER_REPEAT_TAG ="TimePickerRepeat"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -37,7 +39,6 @@ class RepeatingAlarm : AppCompatActivity(), View.OnClickListener, TimePickerFrag
         btn_add_set_repeating_alarm.setOnClickListener(this)
 
         alarmReceiver = AlarmReceiver()
-
     }
 
     override fun onClick(v: View?) {
@@ -51,7 +52,7 @@ class RepeatingAlarm : AppCompatActivity(), View.OnClickListener, TimePickerFrag
                 timePickerFragmentRepeatingAlarm.show(supportFragmentManager, TIME_PICKER_REPEAT_TAG)
             }
             R.id.btn_add_set_repeating_alarm -> {
-                val repeatingTimeAlarm = tv_repeating_alarm.text.toString()
+                val repeatingTimeAlarm = tv_repeating_time.text.toString()
                 val repeatMessage = et_note_repeating.text.toString()
 
                 alarmReceiver.setRepeatingAlarm(
@@ -62,7 +63,13 @@ class RepeatingAlarm : AppCompatActivity(), View.OnClickListener, TimePickerFrag
 
                 CoroutineScope(Dispatchers.IO).launch {
                     db.alarmDao().AddAlarm(
-                        Alarm(0, repeatingTimeAlarm, "Repeating Alarm", repeatMessage, AlarmReceiver.TYPE_REPEATING)
+                        Alarm(
+                            0,
+                            repeatingTimeAlarm,
+                            "Repeating Alarm",
+                            repeatMessage,
+                            AlarmReceiver.TYPE_REPEATING
+                        )
                     )
                     finish()
                 }
@@ -75,7 +82,7 @@ class RepeatingAlarm : AppCompatActivity(), View.OnClickListener, TimePickerFrag
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
         calendar.set(Calendar.MINUTE, minute)
 
-        val timeFormatRepeating = SimpleDateFormat ("HH:mm " , Locale.getDefault())
+        val timeFormatRepeating = SimpleDateFormat("HH:mm ", Locale.getDefault())
 
         when(tag) {
             TIME_PICKER_REPEAT_TAG -> tv_repeating_time.text =
